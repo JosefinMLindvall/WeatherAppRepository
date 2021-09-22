@@ -28,9 +28,9 @@ class WeatherViewController: UIViewController {
   
   // OVERRIDDEN METHODS
   override func viewDidLoad() {
-    viewModel.locationName.bind { [weak self] locationName in
-      
-      self?.cityLabel.text = locationName // This code binds cityLabel.text to viewModel.locationName.
+    
+    viewModel.locationNameBox.bindListenerToValue { [weak self] locationName in
+      self?.cityLabel.text = locationName 
     }
   }
 

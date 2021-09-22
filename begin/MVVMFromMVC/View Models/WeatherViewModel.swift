@@ -1,12 +1,19 @@
 import Foundation
 import UIKit.UIImage // Rule of thumb: never import "UIKit" as a whole in a view model, only import what is needed.
 
+let LOADING_STRING = "Loading..."
+
 // This class is made public to be open for testing
 public class WeatherViewModel {
   
   private let geocoder = LocationGeocoder()
   static let defaultAddress = "McGaheysville, VA"
-  let locationName = Box("Loading...")
+  
+  let locationNameBox = Box(LOADING_STRING)
+  
+  init() {
+    changeLocation(to: Self.defaultAddress)
+  }
 
   private func fetchWeatherForLocation(_ location: Location) {
     WeatherbitService.weatherDataForLocation(
@@ -22,11 +29,12 @@ public class WeatherViewModel {
   }
   
   func changeLocation(to newLocation: String) {
-    locationName.value = "Loading..."
-    geocoder.geocode(addressString: newLocation) { [weak self] locations in
+    locationNameBox.value = LOADING_STRING
+    
+    geocoder.convertStringToLocation(addressString: newLocation) { [weak self] locations in
       guard let self = self else { return }
       if let location = locations.first {
-        self.locationName.value = location.name
+        self.locationNameBox.value = location.name // The listener defined in the view controller is triggered
         self.fetchWeatherForLocation(location)
         return
       }

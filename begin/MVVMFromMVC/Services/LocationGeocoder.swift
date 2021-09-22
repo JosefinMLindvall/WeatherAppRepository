@@ -33,7 +33,7 @@ class LocationGeocoder {
   private lazy var geocoder = CLGeocoder()
   
   ///Convert a place name to a location
-  func geocode(addressString: String, callback: @escaping ([Location]) -> ()) {
+  func convertStringToLocation(addressString: String, callback: @escaping ([Location]) -> ()) {
     geocoder.geocodeAddressString(addressString) { (placemarks, error) in
       var locations: [Location] = []
       if let error = error {

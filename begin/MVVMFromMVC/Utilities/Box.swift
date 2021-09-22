@@ -11,7 +11,7 @@ final class Box <T> {
   
   // typalias is just another name for a type. This means "Listener" is now a type of function,
   // and any function which takes T as argument and returns Void can be initialized with the type
-  // "Listener"
+  // "Listener". Generally in programming; an "event listener" is a function in a computer program that waits for an event to occur, and which is automatically executed after that event.
   typealias Listener = (T) -> Void
   
   // A new function is created of the type Listener (optional, can be nil), but it is not defined.
@@ -35,7 +35,7 @@ final class Box <T> {
   // The method bind can be called on a Box object. It takes a Listener as argument (ie a function of the type
   // Listener). It sets the attribute "listener" to the Listener function received as argument.
   // The function listener is then called with the value as argument.
-    func bind(listener: Listener?) {
+    func bindListenerToValue(listener: Listener?) {
       self.listener = listener
       listener?(value)
     }
