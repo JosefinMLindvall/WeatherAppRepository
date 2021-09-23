@@ -1,7 +1,10 @@
 import Foundation
 
 // This class perfoms "boxing" wich is a mechanism for binding together the viewcontroller
-// and the viewmodel.
+// and the viewmodel. The Box object is created in (and belongs to ) the view model. Here, the
+// value is set to a default value. This value is changed later in the view controller,
+// and here, a listener function is also defined which will be triggered every time the
+// value is changed.
 
 
 // Final means that no other class can inherit from this.
@@ -28,7 +31,7 @@ final class Box <T> {
     }
     
   // This is the initializer for the class Box. The underscore is there to enable calling init without a label.
-    init(_ value: T) {
+    init(value: T) {
       self.value = value
     }
   

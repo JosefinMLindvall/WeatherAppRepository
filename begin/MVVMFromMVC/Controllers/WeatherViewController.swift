@@ -5,18 +5,6 @@ class WeatherViewController: UIViewController {
   // ATTRIBUTES
   private let viewModel = WeatherViewModel()
   
-  private let dateFormatter: DateFormatter = {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "EEEE, MMM d"
-    return dateFormatter
-  }()
-  
-  private let tempFormatter: NumberFormatter = {
-    let tempFormatter = NumberFormatter()
-    tempFormatter.numberStyle = .none
-    return tempFormatter
-  }()
-  
   
   // IBOUTLETS
   @IBOutlet weak var cityLabel: UILabel!
@@ -29,11 +17,24 @@ class WeatherViewController: UIViewController {
   // OVERRIDDEN METHODS
   override func viewDidLoad() {
     
-    viewModel.locationNameBox.bindListenerToValue { [weak self] locationName in
-      self?.cityLabel.text = locationName 
-    }
+    viewModel.locationNameBox.bindListenerToValue (listener: { [weak self] (locationName) -> Void in
+      self?.cityLabel.text = locationName
+    })
+    
+    viewModel.dateBox.bindListenerToValue (listener: { [weak self] (date) -> Void in
+      self?.dateLabel.text = date
+    })
+    
+    viewModel.iconBox.bindListenerToValue (listener: { [weak self] image in
+      self?.currentIcon.image = image
+    })
+        
+    viewModel.summaryBox.bindListenerToValue (listener: { [weak self] summary in
+      self?.currentSummaryLabel.text = summary
+    })
+        
+    viewModel.forecastSummaryBox.bindListenerToValue (listener: { [weak self] forecast in
+      self?.forecastSummary.text = forecast
+    })
   }
-
-  // GENERAL METHODS
-  
 }
