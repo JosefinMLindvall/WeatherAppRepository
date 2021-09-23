@@ -4,13 +4,14 @@ import UIKit.UIImage // Rule of thumb: never import "UIKit" as a whole in a view
 let LOADING_STRING = "Loading..."
 let LOCATION_ERROR_STRING = "Could not find location"
 let WEATHER_ERROR_STRING = "Error retreiving weather data for selected location"
+let TEMPERATURE_ERROR_STRING = "Error when retrieving temperature"
 
 
 // This class is made public to be open for testing
 public class WeatherViewModel {
   
   private let geocoder = LocationGeocoder()
-  static let defaultAddress = "Anchorage, AK"
+  static let defaultAddress = "Huskvarna, Jönköping"
   
   let locationNameBox = Box(value: LOADING_STRING)
   let dateBox = Box(value: " ")
@@ -51,7 +52,7 @@ public class WeatherViewModel {
     }
   }
   
-  private func updateLocation(to newLocation: String) -> Void {
+  func updateLocation(to newLocation: String) -> Void {
     
     locationNameBox.value = LOADING_STRING
     geocoder.convertStringToLocation(addressString: newLocation) { [weak self] locations in
@@ -70,8 +71,11 @@ public class WeatherViewModel {
   private func updateBoxedValues(with weatherData: WeatherbitData) -> Void {
     self.dateBox.value = self.dateFormatter.string(from: weatherData.date)
     self.iconBox.value = UIImage(named: weatherData.iconName)
-    let temp = self.tempFormatter.string(from: weatherData.currentTemp as NSNumber) ?? ""
-    self.summaryBox.value = "\(weatherData.description) , \(temp)℉"
+    
+    let temp = self.convertFarenheitStringToCelciusString(tempStringInFarenheit: self.tempFormatter.string(from: weatherData.currentTemp as NSNumber)!)
+    
+    self.summaryBox.value = "\(weatherData.description) , \(temp) C°"
+    
     self.forecastSummaryBox.value = "\nSummary: \(weatherData.description)"
   }
   
@@ -81,5 +85,15 @@ public class WeatherViewModel {
     self.iconBox.value = nil
     self.summaryBox.value = ""
     self.forecastSummaryBox.value = ""
+  }
+  
+  private func convertFarenheitStringToCelciusString(tempStringInFarenheit: String) -> String {
+    if let tempInFarenheit = Double(tempStringInFarenheit) {
+      let tempInCelciusAsDouble =  (tempInFarenheit - 32) / 1.8000
+      return String(Int(tempInCelciusAsDouble))
+    }
+    else{
+      return TEMPERATURE_ERROR_STRING
+    }
   }
 }
